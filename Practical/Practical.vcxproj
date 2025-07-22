@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="p1.cpp" />
+    <ClCompile Include="p2.cpp" />
     <ClCompile Include="p2Exercise.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
