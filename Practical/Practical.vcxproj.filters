@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="p1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="p2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="p2Exercise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

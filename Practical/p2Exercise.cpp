@@ -1,6 +1,8 @@
 
 #include <Windows.h>
 #include <gl/GL.h>
+#include <math.h>
+
 
 #pragma comment (lib, "OpenGL32.lib")
 
@@ -15,10 +17,14 @@ float r = 1;
 float g = 0.5;
 float b = 0.5;
 float colorSpeed = 0.0001f;
+float rotateSpeed = 0.0001f;
+float scaleSpeed = 0.005f;
 
 
 
 void p2Q1() {
+	glLoadIdentity();
+
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -26,7 +32,7 @@ void p2Q1() {
 	g = 1;
 	b = 1;
 
-	glLoadIdentity();			//reset the transformaiton
+	//glLoadIdentity();			//reset the transformaiton
 
 	glTranslatef(tx, ty, 0.0);	//translate x and y, tx & ty
 
@@ -43,23 +49,35 @@ void p2Q1() {
 }
 
 void p2Q2() {
-
+	
+	static float time = 0.0f;
+	static float angle = 0.0f;
+	time += colorSpeed;
+	angle += 0.01;
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+
+	glScalef(1, 1, 1.0f);
 
 
-	// Simple color cycling logic
-	r += colorSpeed;
-	g += colorSpeed * 2;
-	b += colorSpeed * 3;
+	//// Simple color cycling logic
+	//r += colorSpeed;
+	//g += colorSpeed * 2;
+	//b += colorSpeed * 3;
 
-	// Wrap colors around [0, 1]
-	if (r > 1.0f) r = 0.0f;
-	if (g > 1.0f) g = 0.0f;
-	if (b > 1.0f) b = 0.0f;
+	//// Wrap colors around [0, 1]
+	//if (r > 1.0f) r = 0.0f;
+	//if (g > 1.0f) g = 0.0f;
+	//if (b > 1.0f) b = 0.0f;
 
-	glRotatef(0.01, 0, 0, 1);		// rz(90), anti clockwise
+
+	// Smooth color cycling using sine waves
+    r = (sin(time) + 1.0f) / 2.0f;     // cycles between 0 to 1
+    g = (sin(time + 2.0f) + 1.0f) / 2.0f;
+    b = (sin(time + 4.0f) + 1.0f) / 2.0f;
+	glRotatef(angle, 0, 0, 1);		// rz(90), anti clockwise
 
 
 	glBegin(GL_POLYGON);
@@ -96,6 +114,64 @@ void p2Q2() {
 
 
 }
+
+void p2Q3() {
+	glLoadIdentity();
+	static float angle = 0.0f; // angle in radians
+	float radius = 0.5f;       // radius of the circular path
+
+	// Update the angle to move anti-clockwise
+	angle += rotateSpeed; // Increase for faster movement
+
+	float x = cos(angle) * radius;
+	float y = sin(angle) * radius;
+
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glRotatef(0.01, 0, 0, 1);		// rz(90), anti clockwise
+
+	glPointSize(10.0f);
+	glBegin(GL_POINTS);
+	glColor3f(1, 0, 0); 
+	glVertex2f(x,y);
+	glEnd();
+}
+
+void p2Q4() {
+	static bool growing = true;
+	static float scale = 0.1f;
+
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+
+	// Update scale value
+	if (growing)
+		scale += scaleSpeed;
+	else
+		scale -= scaleSpeed;
+
+	// Toggle direction
+	if (scale > 100.0f)
+		growing = false;
+	else if (scale < 0.1f)
+		growing = true;
+
+	// Apply the scale transformation
+	glScalef(scale, scale, 1.0f);
+
+	// Draw a fixed-size box centered at origin
+	glColor3f(1.0f, 0.0f, 0.0f); // red
+
+	glBegin(GL_QUADS);
+	glVertex2f(-0.01f, -0.01f);
+	glVertex2f(-0.01f, 0.01f);
+	glVertex2f(0.01f, 0.01f);
+	glVertex2f(0.01f, -0.01f);
+	glEnd();
+}
+
 
 
 
@@ -211,9 +287,11 @@ void display()
 		break;
 
 	case 3:
+		p2Q3();
 		break;
 
 	case 4:
+		p2Q4();
 		break;
 
 	case 5:
