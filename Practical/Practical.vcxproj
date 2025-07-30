@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="p1.cpp" />
-    <ClCompile Include="p2.cpp" />
-    <ClCompile Include="p2Exercise.cpp" />
-    <ClCompile Include="p3Demo.cpp" />
-    <ClCompile Include="p3Exercise.cpp" />
+    <ClCompile Include="p4Demo.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
