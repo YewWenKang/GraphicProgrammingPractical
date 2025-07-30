@@ -7,169 +7,148 @@
 
 #define WINDOW_TITLE "OpenGL Window"
 
-float tx = 0;
-float ty = 0;
-float tSpeed = 0.1;
 int qNum = 1;
+float tx1 = 0;
+float ty1 = 0;
+float tx2 = 0;
+float ty2 = 0;
+float tSpeed = 0.1;
 
-float r = 1;
-float g = 0.5;
-float b = 0.5;
-float colorSpeed = 0.0001f;
-float rotateSpeed = 0.0001f;
-float scaleSpeed = 0.005f;
-
-
-
-void p2Q1() {
-	glLoadIdentity();
-
+void p3Q1() {
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//r = 1;
-	//g = 1;
-	//b = 1;
-
-	//glLoadIdentity();			//reset the transformaiton
-
-	glTranslatef(tx, ty, 0.0);	//translate x and y, tx & ty
-
-
-
-	glBegin(GL_QUADS);			//quad
-	glColor3f(r, g, b);
+	glPushMatrix();
+	glTranslatef(tx1, ty1, 0);
+	glBegin(GL_QUADS);
+	glColor3f(1, 0, 0);
 	glVertex2f(-0.5, 0.0);
 	glVertex2f(-0.5, 0.5);
 	glVertex2f(0.5, 0.5);
 	glVertex2f(0.5, 0.0);
 	glEnd();
+	glPopMatrix();
 
-}
-
-void p2Q2() {
-
-	static float time = 0.0f;
-	static float angle = 0.0f;
-	time += colorSpeed;
-	angle += 0.01;
-
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-
-	glScalef(1, 1, 1.0f);
-
-
-	//// Simple color cycling logic
-	//r += colorSpeed;
-	//g += colorSpeed * 2;
-	//b += colorSpeed * 3;
-
-	//// Wrap colors around [0, 1]
-	//if (r > 1.0f) r = 0.0f;
-	//if (g > 1.0f) g = 0.0f;
-	//if (b > 1.0f) b = 0.0f;
-
-
-	// Smooth color cycling using sine waves
-	r = (sin(time) + 1.0f) / 2.0f;     // cycles between 0 to 1
-	g = (sin(time + 2.0f) + 1.0f) / 2.0f;
-	b = (sin(time + 4.0f) + 1.0f) / 2.0f;
-	glRotatef(angle, 0, 0, 1);		// rz(90), anti clockwise
-
-
-	glBegin(GL_POLYGON);
-	glColor3f(r, g, b);
-	glVertex2f(0, 0.5); //top
-	glVertex2f(0.15, 0); //right
-	glVertex2f(0, -0.5); //bottom
-	glVertex2f(-0.15, 0); //left
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(0.15, 0); //right
-	glVertex2f(0.65, 0);
-	glVertex2f(0, -0.5); //bottom
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-0.15, 0); //left
-	glVertex2f(-0.65, 0);
-	glVertex2f(0, -0.5); //bottom
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(-0.15, 0); //left
-	glVertex2f(0, -0.5); //bottom
-	glVertex2f(-0.45, -0.8); //bottom
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex2f(0.15, 0); //right
-	glVertex2f(0, -0.5); //bottom
-	glVertex2f(0.45, -0.8); //bottom
-	glEnd();
-
-
-}
-
-void p2Q3() {
-	glLoadIdentity();
-	static float angle = 0.0f; // angle in radians
-	float radius = 0.5f;       // radius of the circular path
-
-	// Update the angle to move anti-clockwise
-	angle += rotateSpeed; // Increase for faster movement
-
-	float x = cos(angle) * radius;
-	float y = sin(angle) * radius;
-
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glRotatef(0.01, 0, 0, 1);		// rz(90), anti clockwise
-
-	glPointSize(10.0f);
-	glBegin(GL_POINTS);
-	glColor3f(1, 0, 0);
-	glVertex2f(x, y);
-	glEnd();
-}
-
-void p2Q4() {
-	static bool growing = true;
-	static float scale = 0.1f;
-
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-
-	// Update scale value
-	if (growing)
-		scale += scaleSpeed;
-	else
-		scale -= scaleSpeed;
-
-	// Toggle direction
-	if (scale > 100.0f)
-		growing = false;
-	else if (scale < 0.1f)
-		growing = true;
-
-	// Apply the scale transformation
-	glScalef(scale, scale, 1.0f);
-
-	// Draw a fixed-size box centered at origin
-	glColor3f(1.0f, 0.0f, 0.0f); // red
-
+	glPushMatrix();
+	glTranslatef(tx2, ty2, 0);
 	glBegin(GL_QUADS);
-	glVertex2f(-0.01f, -0.01f);
-	glVertex2f(-0.01f, 0.01f);
-	glVertex2f(0.01f, 0.01f);
-	glVertex2f(0.01f, -0.01f);
+	glColor3f(0, 1, 0);
+	glVertex2f(-0.5, 0.0);
+	glVertex2f(-0.5, 0.5);
+	glVertex2f(0.5, 0.5);
+	glVertex2f(0.5, 0.0);
+	glEnd();
+	glPopMatrix();
+
+}
+
+void drawCircle(float cx, float cy, float r, int num_segments) {
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(0.8f, 0.8f, 0.8f); // light gray circle
+	glVertex2f(cx, cy); // center
+	for (int i = 0; i <= num_segments; i++) {
+		float theta = 2.0f * 3.1415926f * float(i) / float(num_segments);
+		float x = r * cosf(theta);
+		float y = r * sinf(theta);
+		glVertex2f(cx + x, cy + y);
+	}
 	glEnd();
 }
+
+void p3Q2() {
+	glClearColor(0.1f, 0.1f, 0.2f, 1.0f); // dark blue background
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// 1. Draw base triangle (brown)
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.55f, 0.27f, 0.07f); // brown
+	glVertex2f(-0.1f, -0.5f);
+	glVertex2f(0.1f, -0.5f);
+	glVertex2f(0.0f, 0.0f);
+	glEnd();
+
+
+
+	// Blade quad (handle)
+	glBegin(GL_QUADS);
+	glColor3f(1.0f, 1.0f, 1.0f); // white blades
+	glVertex2f(0.2f, 0.2f);
+	glVertex2f(0.2f, 0.0f);
+	glVertex2f(0.4f, 0.0f);
+	glVertex2f(0.4f, 0.2f);
+	glEnd();
+
+	// Blade triangle (tip)
+	glPushMatrix();
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 0.0f); // red tip
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(0.2f, 0.2f);
+	glVertex2f(0.2f, 0.0f);
+	glEnd();
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 0.0f); // red tip
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(-0.2f, 0.2f);
+	glVertex2f(-0.2f, 0.0f);
+	glEnd();
+	glPopMatrix();
+
+	// Blade quad (handle)
+	glBegin(GL_QUADS);
+	glColor3f(1.0f, 1.0f, 1.0f); // white blades
+	glVertex2f(-0.2f, 0.2f);
+	glVertex2f(-0.2f, 0.0f);
+	glVertex2f(-0.4f, 0.0f);
+	glVertex2f(-0.4f, 0.2f);
+	glEnd();
+
+
+
+	glPushMatrix();
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 0.0f); // red tip
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(0.0f, -0.2f);
+	glVertex2f(-0.2f, -0.2f);
+	glEnd();
+	glPopMatrix();
+
+	// Blade quad (handle)
+	glBegin(GL_QUADS);
+	glColor3f(1.0f, 1.0f, 1.0f); // white blades
+	glVertex2f(0.0f, -0.2f);
+	glVertex2f(0.0f, -0.4f);
+	glVertex2f(-0.2f, -0.4f);
+	glVertex2f(-0.2f, -0.2f);
+	glEnd();
+
+
+	glPushMatrix();
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 0.0f); // red tip
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(0.0f, 0.2f);
+	glVertex2f(-0.2f, 0.2f);
+	glEnd();
+	glPopMatrix();
+
+	// Blade quad (handle)
+	glBegin(GL_QUADS);
+	glColor3f(1.0f, 1.0f, 1.0f); // white blades
+	glVertex2f(0.0f, 0.2f);
+	glVertex2f(0.0f, 0.4f);
+	glVertex2f(-0.2f, 0.4f);
+	glVertex2f(-0.2f, 0.2f);
+	glEnd();
+
+	drawCircle(0.0f, 0.00f, 0.04f, 40);
+}
+
 
 
 
@@ -198,38 +177,52 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == '6')
 			qNum = 6;
 		else if (wParam == VK_RIGHT)
-			tx += tSpeed;
+		{
+			tx1 += tSpeed;
+			tx2 -= tSpeed;
+		}
+
 		else if (wParam == VK_LEFT)
-			tx -= tSpeed;
+		{
+			tx1 -= tSpeed;
+			tx2 += tSpeed;
+		}
 		else if (wParam == VK_UP)
-			ty += tSpeed;
+		{
+			ty1 += tSpeed;
+			ty2 -= tSpeed;
+		}
 		else if (wParam == VK_DOWN)
-			ty -= tSpeed;
-		else if (wParam == 'R') {
-			r = 1;
-			g = 0;
-			b = 0;
+		{
+			ty1 -= tSpeed;
+			ty2 += tSpeed;
 		}
-
-		else if (wParam == 'G') {
-			r = 0;
-			g = 1;
-			b = 0;
-		}
-
-		else if (wParam == 'B') {
-			r = 0;
-			g = 0;
-			b = 1;
-		}
-
 		else if (wParam == VK_SPACE) {
-			r = 1;
-			g = 1;
-			b = 1;
-			tx = 0;
-			ty = 0;
+			tx1 = 0;
+			ty1 = 0;
+			tx2 = 0;
+			ty2 = 0;
+
 		}
+		//else if (wParam == 'R') {
+		//	r = 1;
+		//	g = 0;
+		//	b = 0;
+		//}
+
+		//else if (wParam == 'G') {
+		//	r = 0;
+		//	g = 1;
+		//	b = 0;
+		//}
+
+		//else if (wParam == 'B') {
+		//	r = 0;
+		//	g = 0;
+		//	b = 1;
+		//}
+
+
 
 		break;
 
@@ -278,19 +271,17 @@ void display()
 
 	switch (qNum) {
 	case 1:
-		p2Q1();
+		p3Q1();
 		break;
 
 	case 2:
-		p2Q2();
+		p3Q2();
 		break;
 
 	case 3:
-		p2Q3();
 		break;
 
 	case 4:
-		p2Q4();
 		break;
 
 	case 5:
