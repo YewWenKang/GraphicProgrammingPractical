@@ -26,7 +26,7 @@ void p2Q1() {
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	
 	//r = 1;
 	//g = 1;
 	//b = 1;

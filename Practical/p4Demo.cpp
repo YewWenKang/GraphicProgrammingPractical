@@ -9,6 +9,10 @@
 
 int qNum = 1;
 int rx =1, ry =1, rz=1;
+float lowerArmAngle = 0.0f;  // For up/down movement of lower arm
+float armRotation = 0.0f;    // For whole arm rotation
+
+
 
 void drawCube(float size) {
 	glBegin(GL_QUADS);
@@ -51,6 +55,8 @@ void drawCube(float size) {
 	glEnd();
 
 }
+
+
 
 void drawPyramid(float size) {
 	glBegin(GL_LINE_LOOP);
@@ -167,6 +173,66 @@ void p4Q2() {
 	glEnd();
 }
 
+void drawWireCube(float width, float height, float depth) {
+	float w = width / 2.0f;
+	float h = height / 2.0f;
+	float d = depth / 2.0f;
+
+	// Front Face
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(-w, -h, d);
+	glVertex3f(w, -h, d);
+	glVertex3f(w, h, d);
+	glVertex3f(-w, h, d);
+	glEnd();
+
+	// Back Face
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(-w, -h, -d);
+	glVertex3f(w, -h, -d);
+	glVertex3f(w, h, -d);
+	glVertex3f(-w, h, -d);
+	glEnd();
+
+	// Connecting Edges
+	glBegin(GL_LINES);
+	glVertex3f(-w, -h, d); glVertex3f(-w, -h, -d);
+	glVertex3f(w, -h, d);  glVertex3f(w, -h, -d);
+	glVertex3f(w, h, d);   glVertex3f(w, h, -d);
+	glVertex3f(-w, h, d);  glVertex3f(-w, h, -d);
+	glEnd();
+}
+
+
+void p4Q3() {
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	glLoadIdentity();
+
+	// Whole arm rotation (LEFT/RIGHT keys)
+	glRotatef(armRotation, 0, 1, 1);
+
+	// Draw Upper Arm (Fixed Box on Positive X)
+	glPushMatrix();
+	glTranslatef(0.4f, 0.0f, 0.0f);  // Move to right side (positive X)
+	drawWireCube(0.8f, 0.3f, 0.3f);
+	glPopMatrix();
+
+	// Draw Lower Arm (Rotatable Box on Negative X side)
+	glPushMatrix();
+	// Move pivot to left face bottom-right point of upper arm
+	glTranslatef(0.0f, -0.15f, 0.15f); // X: 0 (left face), Y: bottom, Z: right edge
+	glRotatef(lowerArmAngle, 0, 0, 1);  // Rotate around Z-axis (in-place)
+	glTranslatef(-0.4f, 0.15f, -0.15f); // Offset back to center of lower arm
+	drawWireCube(0.8f, 0.3f, 0.3f);
+	glPopMatrix();
+}
+
+
+
+
 
 
 
@@ -200,6 +266,18 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			rx = 0, ry=1,rz = 0;
 		else if (wParam == 'Z')
 			rx = 0, ry = 0,rz=1;
+		else if (wParam == VK_UP)
+			lowerArmAngle -= 5.0f;  // Lower Arm Up
+		else if (wParam == VK_DOWN)
+			lowerArmAngle += 5.0f;  // Lower Arm Down
+		else if (wParam == VK_RIGHT)
+			armRotation += 5.0f;    // Rotate whole arm right
+		else if (wParam == VK_LEFT)
+			armRotation -= 5.0f;    // Rotate whole arm left
+		else if (wParam == VK_SPACE) { // Reset
+			lowerArmAngle = 0.0f;
+			armRotation = 0.0f;
+		}
 		//else if (wParam == VK_DOWN)
 		//	ty -= tSpeed;
 		//else if (wParam == 'R') {
@@ -283,6 +361,7 @@ void display()
 		break;
 
 	case 3:
+		p4Q3();
 		break;
 
 	case 4:
