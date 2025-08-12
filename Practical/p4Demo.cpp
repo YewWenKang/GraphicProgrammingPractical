@@ -8,7 +8,7 @@
 #define WINDOW_TITLE "OpenGL Window"
 
 int qNum = 1;
-int rx = 1, ry = 1, rz = 1;
+int rx =1, ry =1, rz=1;
 float lowerArmAngle = 0.0f;  // For up/down movement of lower arm
 float armRotation = 0.0f;    // For whole arm rotation
 
@@ -91,7 +91,7 @@ void drawPyramid(float size) {
 	glVertex3f(0.0f, 0.0f, size);
 	glVertex3f(0.5f, size, 0.5f);
 	glEnd();
-
+	
 
 }
 
@@ -110,9 +110,9 @@ void p4Q1() {
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-
+	
 	glRotatef(0.01, rx, ry, rz);
-
+	
 	drawPyramid(0.5f);
 }
 
@@ -261,11 +261,11 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == '6')
 			qNum = 6;
 		else if (wParam == 'X')
-			rx = 1, ry = 0, rz = 0;
+			rx=1,ry = 0, rz = 0;
 		else if (wParam == 'Y')
-			rx = 0, ry = 1, rz = 0;
+			rx = 0, ry=1,rz = 0;
 		else if (wParam == 'Z')
-			rx = 0, ry = 0, rz = 1;
+			rx = 0, ry = 0,rz=1;
 		else if (wParam == VK_UP)
 			lowerArmAngle -= 5.0f;  // Lower Arm Up
 		else if (wParam == VK_DOWN)
@@ -365,7 +365,6 @@ void display()
 		break;
 
 	case 4:
-		p4Demo();
 		break;
 
 	case 5:
