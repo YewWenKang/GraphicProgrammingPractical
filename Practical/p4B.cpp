@@ -276,11 +276,11 @@ void display()
 
 	switch (qNum) {
 	case 1:
-		//drawSphere();
+		drawSphere(0.2);
 		break;
 
 	case 2:
-		//drawCylinder();
+		drawCylinder(0.2,0.2,0.8,10,10);
 		break;
 
 	case 3:
