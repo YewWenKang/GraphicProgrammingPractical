@@ -7,12 +7,20 @@
 #define WINDOW_TITLE "Prac1 Demo"
 
 int qNum = 1;			//Question Number, Default Q1
-float tz = 0,tSpeed = 3.0; //translate tz with tspeed
+float tz = 0,tSpeed = 1.0; //translate tz with tspeed
 bool isOrtho = true;
+float oNear = -10, oFar = 10;		//orthor near & far boundary
+float pNear = 1, pFar = 10;		//perspective near and far boundary
+float r1 = 3.0;
+float ptx = 0, pty = 0;			// tx, ty with tSpeed for projection
+float tx = 0;
+float pry = 0 , prSpeed = 1.0;	//ry with prSpeedfor projection
+
 
 void drawSphere(double r) {
 	GLUquadricObj* sphere = NULL;
 	sphere = gluNewQuadric();
+	gluQuadricDrawStyle(sphere,GLU_LINE);
 	gluSphere(sphere, r, 30, 30);
 	gluDeleteQuadric(sphere);
 }
@@ -20,12 +28,15 @@ void drawSphere(double r) {
 void projection() {
 	glMatrixMode(GL_PROJECTION);		//refer to the projection matrix
 	glLoadIdentity();					//reset
+	
+	glTranslatef(ptx, pty, 0.0);
+
 	if (isOrtho) {
-		glOrtho(-10, 10, -10, 10, -10, 10);			//default viewing volume
+		glOrtho(-10, 10, -10, 10, oNear, oFar);			//default viewing volume
 	}
 	else {
 		//Perspective view
-		glFrustum(-10, 10, -10, 10, 1, 10);
+		glFrustum(-10, 10, -10, 10, pNear, pFar);
 		//gluPerspective(45, 1.0, 1, 10);
 	}
 	
@@ -57,20 +68,55 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			qNum = 5;
 		else if (wParam == '6')
 			qNum = 6;
-		else if (wParam == VK_UP)
-			tz -= tSpeed;
-		else if (wParam == VK_DOWN)
-			tz += tSpeed;
+		else if (wParam == VK_UP) {
+			if (isOrtho) {
+				if (tz > oNear + r1) {
+					tz -= tSpeed;
+				}
+			}
+			else {
+				if (tz > pNear - pFar) {
+					tz -= tSpeed;
+				}
+			}
+		}
+
+		else if (wParam == VK_DOWN) {
+			if (isOrtho) {
+				if (tz < oFar - r1) {
+					tz += tSpeed;
+				}
+			}
+			else {
+				if (tz < pNear - r1) { // pnear - radius
+					tz += tSpeed;
+				}
+			}
+		}
+
 		else if (wParam == 'O') {
 			isOrtho = true;
 			tz = 0;
 		}
-			
+
 		else if (wParam == 'P') {
 			isOrtho = false;
 			tz = 0;
 		}
-			
+		else if (wParam == 'A') {
+			ptx -= tSpeed;
+		}
+		else if (wParam == 'D')
+			ptx += tSpeed;
+		else if (wParam == VK_LEFT) {
+			tx -= tSpeed;
+		}
+		else if (wParam == VK_RIGHT)
+			tx += tSpeed;
+		else if (wParam == 'L')
+			pry += prSpeed;
+		else if (wParam == 'R')
+			pry -= prSpeed;
 		break;
 
 	default:
@@ -118,7 +164,6 @@ bool initPixelFormat(HDC hdc)
 
 void display()
 {
-
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -128,8 +173,9 @@ void display()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.0, 0.0, tz);
-	drawSphere(3.0);
+	glTranslatef(tx, 0.0, tz);
+	glRotatef(pry, 0.0, 1.0, 0.0);
+	drawSphere(r1);
 
 
 	//--------------------------------
