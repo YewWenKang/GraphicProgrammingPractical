@@ -15,7 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="p6Exercise.cpp">
+    <Image Include="Box.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="red_brick_wall_32.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="p7Exercise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

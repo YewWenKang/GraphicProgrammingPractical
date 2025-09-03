@@ -19,7 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="p6Exercise.cpp" />
+    <Image Include="Box.bmp" />
+    <Image Include="red_brick_wall_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="p7Exercise.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
