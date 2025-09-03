@@ -18,7 +18,7 @@ float difN[3] = { 1.0, 0.0, 0.0 };                // blue dif material
 bool isLightOn = false;
 bool showSphere = true;
 
-float rotation = -0.01;
+float rotationAngle = 0.0f;  // Cumulative rotation angle
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -43,10 +43,29 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
             showSphere = false;
         }
         else if (wParam == VK_UP) {
-            rotation = -0.01;
+            rotationAngle += 5.0f;  // Rotate clockwise by 5 degrees
         }
         else if (wParam == VK_DOWN) {
-            rotation = 0.01;
+            rotationAngle -= 5.0f;  // Rotate anti-clockwise by 5 degrees
+        }
+        // Light position controls
+        else if (wParam == 'W') {
+            posD[1] += 0.5f;  // Move light up
+        }
+        else if (wParam == 'S') {
+            posD[1] -= 0.5f;  // Move light down
+        }
+        else if (wParam == 'A') {
+            posD[0] -= 0.5f;  // Move light left
+        }
+        else if (wParam == 'D') {
+            posD[0] += 0.5f;  // Move light right
+        }
+        else if (wParam == 'E') {
+            posD[2] += 0.5f;  // Move light near (positive Z)
+        }
+        else if (wParam == 'Q') {
+            posD[2] -= 0.5f;  // Move light far (negative Z)
         }
 
     default:
@@ -102,29 +121,35 @@ void drawSphere(double r, GLenum style)
 void drawPyramid()
 {
     glBegin(GL_TRIANGLES);
-    // Front
+    
+    // Front face
+    glNormal3f(0.0f, 0.447f, 0.894f);  // Normal pointing outward from front face
     glVertex3f(0.0f, 0.5f, 0.0f);
     glVertex3f(-0.5f, -0.5f, 0.5f);
     glVertex3f(0.5f, -0.5f, 0.5f);
 
-    // Right
+    // Right face
+    glNormal3f(0.894f, 0.447f, 0.0f);  // Normal pointing outward from right face
     glVertex3f(0.0f, 0.5f, 0.0f);
     glVertex3f(0.5f, -0.5f, 0.5f);
     glVertex3f(0.5f, -0.5f, -0.5f);
 
-    // Back
+    // Back face
+    glNormal3f(0.0f, 0.447f, -0.894f);  // Normal pointing outward from back face
     glVertex3f(0.0f, 0.5f, 0.0f);
     glVertex3f(0.5f, -0.5f, -0.5f);
     glVertex3f(-0.5f, -0.5f, -0.5f);
 
-    // Left
+    // Left face
+    glNormal3f(-0.894f, 0.447f, 0.0f);  // Normal pointing outward from left face
     glVertex3f(0.0f, 0.5f, 0.0f);
     glVertex3f(-0.5f, -0.5f, -0.5f);
     glVertex3f(-0.5f, -0.5f, 0.5f);
     glEnd();
 
-    // Base (square)
+    // Base (square) - pointing downward
     glBegin(GL_QUADS);
+    glNormal3f(0.0f, -1.0f, 0.0f);  // Normal pointing downward
     glVertex3f(-0.5f, -0.5f, 0.5f);
     glVertex3f(0.5f, -0.5f, 0.5f);
     glVertex3f(0.5f, -0.5f, -0.5f);
@@ -144,14 +169,14 @@ void lighting() {
     
 
     //Light 0 : red color amb light at pos (0 , 0.8 , 0) above sphere
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambL);
-    glLightfv(GL_LIGHT0, GL_POSITION, posA);
-    glEnable(GL_LIGHT0);
+    //glLightfv(GL_LIGHT0, GL_AMBIENT, ambL);
+    //glLightfv(GL_LIGHT0, GL_POSITION, posA);
+    //glEnable(GL_LIGHT0);
 
     //Light 1 : green color amb light at pos (0.0, 0.8 , 0) above sphere
-    //glLightfv(GL_LIGHT1, GL_DIFFUSE, difL);
-    //glLightfv(GL_LIGHT1, GL_POSITION, posD);
-    //glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, difL);
+    glLightfv(GL_LIGHT1, GL_POSITION, posD);
+    glEnable(GL_LIGHT1);
 
 
 }
@@ -165,7 +190,8 @@ void display()
     lighting();
 
     glMatrixMode(GL_MODELVIEW);
-    glRotatef(rotation, 1.0, 1.0, 1.0);
+    glLoadIdentity();  // Reset transformations
+    glRotatef(rotationAngle, 1.0, 1.0, 1.0);  // Apply manual rotation
 
     glColor3f(1.0, 0.0, 0.0);
     //glMaterialfv(GL_FRONT, GL_AMBIENT, ambN);   //blue amb material
